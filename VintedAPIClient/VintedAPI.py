@@ -97,7 +97,3 @@ class VintedAPI:
         return int(existing_files[-1].replace('img', '').replace('.jpg', '')) if existing_files else 0
 
 
-if __name__ == '__main__':
-    g = VintedAPI()
-    url = g.get_list_items("Stone Island", 1)["data"]["items"][0]["item_url"]
-    g.download_images_by_url(url, destination_folder="/home/giacomo-pc/PycharmProjects/VintedScraper/src/VintedAPIClient/t")
