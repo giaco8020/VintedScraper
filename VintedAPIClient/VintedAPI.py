@@ -2,7 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlparse
 
 
 class VintedAPI:
@@ -67,6 +67,11 @@ class VintedAPI:
 
     def download_images_by_url(self, url, destination_folder):
         self._refresh_token_if_needed()
+        domain_parts = urlparse(url).netloc.split('.')
+        if len(domain_parts) < 3 or domain_parts[0] != 'www' or domain_parts[1] != 'vinted':
+            return {"success": False,
+                    "message": "Domain must be 'www.vinted' "}
+
         response = self.session.get(url)
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
@@ -92,3 +97,7 @@ class VintedAPI:
         return int(existing_files[-1].replace('img', '').replace('.jpg', '')) if existing_files else 0
 
 
+if __name__ == '__main__':
+    g = VintedAPI()
+    url = g.get_list_items("Stone Island", 1)["data"]["items"][0]["item_url"]
+    g.download_images_by_url(url, destination_folder="/home/giacomo-pc/PycharmProjects/VintedScraper/src/VintedAPIClient/t")
