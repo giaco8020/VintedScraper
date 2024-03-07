@@ -1,8 +1,6 @@
 
 # VintedAPIClient
 
-This Python package provides an easy-to-use client for scraping data from Vinted website.
-
 ## Installation
 
 You can install the package using pip:
