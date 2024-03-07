@@ -13,7 +13,7 @@ pip install VintedAPIClient
 
 
 ```python
-from VintedAPIClient import VintedAPI
+from VintedAPIClient.VintedAPI import VintedAPI
 
 # Initialize the API client
 api = VintedAPI()
