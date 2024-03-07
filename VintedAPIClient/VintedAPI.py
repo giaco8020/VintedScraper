@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 from urllib.parse import quote_plus, urlparse
-
+import re
 
 class VintedAPI:
     def __init__(self, base_url="https://www.vinted.it"):
@@ -77,6 +77,7 @@ class VintedAPI:
             soup = BeautifulSoup(response.text, 'html.parser')
             images = soup.select('section.item-photos__container img')
             last_file_number = self._get_last_file_number(destination_folder)
+            #print(last_file_number)
 
             for img in images:
                 img_src = img.get('src')
@@ -92,8 +93,14 @@ class VintedAPI:
         else:
             return {"success": False, "statusCode": response.status_code, "message": "Error downloading images"}
 
-    def _get_last_file_number(self, destination_folder):
-        existing_files = [f for f in os.listdir(destination_folder) if f.endswith('.jpg')]
-        return int(existing_files[-1].replace('img', '').replace('.jpg', '')) if existing_files else 0
+    def _get_last_file_number(self,destination_folder):
+        pattern = re.compile(r'img(\d+)\.jpg$')
+        numbers = []
 
+        for filename in os.listdir(destination_folder):
+            match = pattern.match(filename)
+            if match:
+                number = int(match.group(1))
+                numbers.append(number)
+        return max(numbers) if numbers else 0
 
